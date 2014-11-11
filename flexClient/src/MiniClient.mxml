@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="creationComplete(event)"
+			   width="955" height="600">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.media.Camera;
+			import flash.media.Video;
+			
+			import mx.events.FlexEvent;
+			
+			import events.NewStreamInRoomEvent;
+			
+			import gateways.RTCGateway;
+			
+			public var rtcGateway:RTCGateway = new RTCGateway();
+			public var ns:NetStream = null;
+			
+			protected function creationComplete(event:FlexEvent):void
+			{	
+				rtcGateway.addEventListener("ConnectionSuccess",handleConnectionSuccess);
+				rtcGateway.addEventListener("NewStreamInRoomEvent",handleNewStreamInRoom);
+				
+				rtcGateway.connectToServer();
+			}
+			
+			protected function handleConnectionSuccess(event:Event):void {
+				
+				ns = new NetStream(rtcGateway);
+				
+				// Camera
+				var cam:Camera = Camera.getCamera();
+				if (cam != null) {
+					cam.setMode(192, 144, 10, false);
+					cam.setKeyFrameInterval(30);
+					cam.setQuality(12200, 0);
+					
+					var video:Video = new Video();
+					video.smoothing = true;
+					video.name = "theVideo";
+					
+					video.attachCamera(cam);
+					myCamera.addChild(video);
+					ns.attachCamera(cam);
+				}
+				
+				// Microphone
+				var options:MicrophoneEnhancedOptions = new MicrophoneEnhancedOptions();
+				options.mode = MicrophoneEnhancedMode.FULL_DUPLEX;
+				var mic:Microphone = Microphone.getEnhancedMicrophone();
+				mic.rate = 11;
+				if(mic != null)
+				{
+					mic.enhancedOptions = options;
+					mic.setLoopBack(false);
+					mic.setSilenceLevel(0);
+					ns.attachAudio(mic);
+				}
+				
+				if (mic != null && cam != null) {
+					ns.publish(generateStreamName(20),"live");
+				}
+				
+				
+			}
+			
+			public function generateStreamName(len:uint = 1, userAlphabet:String = "abcdefghijklmnopqrstuvwxyz"):String{
+				var alphabet:Array = userAlphabet.split("");
+				var alphabetLength:int = alphabet.length;
+				var randomLetters:String = "";
+				for (var i:uint = 0; i < len; i++){
+					randomLetters += alphabet[int(Math.floor(Math.random() * alphabetLength))];
+				}
+				return randomLetters;
+			}
+			
+			public function handleNewStreamInRoom(event:NewStreamInRoomEvent):void {
+				var vid:Video = new Video();
+				vid.smoothing = true;
+				vid.name = event.streamName;
+				vid.width = 100;
+				vid.height = 75;
+				var nsVideo:NetStream = new NetStream(rtcGateway);
+				vid.attachNetStream(nsVideo);
+				nsVideo.play(event.streamName);
+				var videoHolder:UIComponent = new UIComponent();
+				videoHolder.width = 100;
+				videoHolder.height = 75;
+				videoHolder.addChild(vid);
+				participantsList.addChild(videoHolder);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:HGroup gap="200">
+		
+		<mx:UIComponent id="myCamera" height="144" width="192">
+		</mx:UIComponent>
+		
+		<mx:VBox id="participantsList" verticalGap="15" verticalScrollPolicy="auto" width="110" height="400">
+		</mx:VBox>
+		
+	</s:HGroup>
+	
+</s:Application>
