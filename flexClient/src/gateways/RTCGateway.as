@@ -18,7 +18,7 @@ package gateways
 			if(this.hasEventListener(NetStatusEvent.NET_STATUS))
 				this.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 			this.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-			this.connect("rtmp://red5.local/myOflaDemo"); // Change the Red5 URL
+			this.connect("rtmp://test.webconf.me/myOflaDemo"); // Change the Red5 URL
 		}
 		
 		protected function onNetStatus(e:NetStatusEvent):void

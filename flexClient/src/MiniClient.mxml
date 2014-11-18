@@ -27,8 +27,6 @@
 			{	
 				rtcGateway.addEventListener("ConnectionSuccess",handleConnectionSuccess);
 				rtcGateway.addEventListener("NewStreamInRoomEvent",handleNewStreamInRoom);
-				
-				rtcGateway.connectToServer();
 			}
 			
 			protected function handleConnectionSuccess(event:Event):void {
@@ -65,7 +63,7 @@
 				}
 				
 				if (mic != null && cam != null) {
-					ns.publish(generateStreamName(20),"live");
+					ns.publish(txtStreamName.text,"live");
 				}
 				
 				
@@ -97,13 +95,25 @@
 				participantsList.addChild(videoHolder);
 			}
 			
+			protected function btnConnect_clickHandler(event:MouseEvent):void
+			{
+				rtcGateway.connectToServer();
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:HGroup gap="200">
 		
-		<mx:UIComponent id="myCamera" height="144" width="192">
-		</mx:UIComponent>
+		<s:VGroup gap="10">
+			<s:HGroup gap="5">
+				<s:TextInput id="txtStreamName" text="stream1"></s:TextInput>
+				<s:Button id="btnConnect" label="Connect" click="btnConnect_clickHandler(event)"></s:Button>
+			</s:HGroup>
+			<mx:UIComponent id="myCamera" height="144" width="192">
+			</mx:UIComponent>
+		</s:VGroup>
+		
 		
 		<mx:VBox id="participantsList" verticalGap="15" verticalScrollPolicy="auto" width="110" height="400">
 		</mx:VBox>
