@@ -35,6 +35,11 @@ public class Application extends MultiThreadedApplicationAdapter implements IStr
 		return true;
 	}
 	
+	@Override
+	public void appDisconnect(IConnection conn) {
+		System.out.println("[ appDisconnect ]");
+	}
+	
 	public void streamPublishStart(IBroadcastStream stream) {
 		System.out.println("[ streamPublishStart ]");
 	}
@@ -68,8 +73,43 @@ public class Application extends MultiThreadedApplicationAdapter implements IStr
 	}
 	
     public void streamBroadcastClose(IBroadcastStream stream) {
-    	System.out.println("[ streamBroadcastClose ]");
+    	IConnection conn = Red5.getConnectionLocal();
+    	String currentClientId = conn.getClient().getId();
+    	
+    	System.out.println("[ streamBroadcastClose ] from clientId: " + currentClientId);
     	streamsInRoom.remove(stream.getPublishedName());
 	}
-	
+    
+    @Override
+	public boolean roomStart(IScope room) {
+    	System.out.println("[ roomStart ]");
+    	return true;
+	}
+
+	@Override
+	public boolean roomConnect(IConnection conn, Object[] params) {
+		System.out.println("[ roomConnect ]");
+		return true;
+	}
+
+	@Override
+	public boolean roomJoin(IClient client, IScope room) {
+		System.out.println("[ roomJoin ]");
+		return true;
+	}
+    
+    @Override
+	public void roomLeave(IClient client, IScope room) {
+    	System.out.println("[ roomLeave ]");
+	}
+    
+    @Override
+	public void roomStop(IScope scope) {
+    	System.out.println("[ roomStop ]");
+    }
+    
+    @Override
+	public void roomDisconnect(IConnection conn) {
+    	System.out.println("[ roomDisconnect ]");
+	}
 }
