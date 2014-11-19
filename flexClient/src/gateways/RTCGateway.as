@@ -4,6 +4,7 @@ package gateways
 	import flash.events.NetStatusEvent;
 	import flash.net.NetConnection;
 	
+	import events.ClientConnectionSuccessEvent;
 	import events.NewStreamInRoomEvent;
 	
 	
@@ -46,13 +47,14 @@ package gateways
 			}
 		}
 		
+		public function clientConnectionSuccess(params:Object = null):void
+		{
+			this.dispatchEvent(new ClientConnectionSuccessEvent(params as String));
+		}
 		
 		public function newStreamInRoom(params:Object = null):void 
 		{
 			this.dispatchEvent(new NewStreamInRoomEvent(params as String));
 		}
-		
-		
-		
 	}
 }

@@ -16,6 +16,7 @@
 			
 			import mx.events.FlexEvent;
 			
+			import events.ClientConnectionSuccessEvent;
 			import events.NewStreamInRoomEvent;
 			
 			import gateways.RTCGateway;
@@ -23,12 +24,14 @@
 			public var rtcGateway:RTCGateway = new RTCGateway();
 			public var ns:NetStream = null;
 			
+			[Bindable]
+			public var clientId:String = "";
+			
 			protected function creationComplete(event:FlexEvent):void
 			{	
 				rtcGateway.addEventListener("ConnectionSuccess",handleConnectionSuccess);
+				rtcGateway.addEventListener("ClientConnectionSuccessEvent",handleClientConnectionSuccess);
 				rtcGateway.addEventListener("NewStreamInRoomEvent",handleNewStreamInRoom);
-				
-				rtcGateway.connectToServer();
 			}
 			
 			protected function handleConnectionSuccess(event:Event):void {
@@ -65,7 +68,7 @@
 				}
 				
 				if (mic != null && cam != null) {
-					ns.publish(generateStreamName(20),"live");
+					ns.publish(txtStreamName.text,"live");
 				}
 				
 				
@@ -79,6 +82,10 @@
 					randomLetters += alphabet[int(Math.floor(Math.random() * alphabetLength))];
 				}
 				return randomLetters;
+			}
+			
+			public function handleClientConnectionSuccess(event:ClientConnectionSuccessEvent):void{
+				this.clientId = event.ClientId();
 			}
 			
 			public function handleNewStreamInRoom(event:NewStreamInRoomEvent):void {
@@ -97,13 +104,30 @@
 				participantsList.addChild(videoHolder);
 			}
 			
+			protected function btnConnect_clickHandler(event:MouseEvent):void
+			{
+				rtcGateway.connectToServer();
+			}
+			
 		]]>
 	</fx:Script>
 	
-	<s:HGroup gap="200">
+	<s:HGroup gap="200" y="20">
 		
-		<mx:UIComponent id="myCamera" height="144" width="192">
-		</mx:UIComponent>
+		<s:VGroup gap="10">
+			<s:HGroup gap="5" verticalAlign="middle">
+				<s:Label text="Type in the broadcastPublishName to use:"/>
+				<s:TextInput id="txtStreamName" text="stream1"></s:TextInput>
+				<s:Button id="btnConnect" label="Connect" click="btnConnect_clickHandler(event)"></s:Button>
+			</s:HGroup>
+			<s:HGroup gap="5" verticalAlign="middle">
+				<s:Label text="ClientId assigned by server:"/>
+				<mx:Text id="txtClientId" text="{clientId}"/>
+			</s:HGroup>
+			<mx:UIComponent id="myCamera" height="144" width="192">
+			</mx:UIComponent>
+		</s:VGroup>
+		
 		
 		<mx:VBox id="participantsList" verticalGap="15" verticalScrollPolicy="auto" width="110" height="400">
 		</mx:VBox>

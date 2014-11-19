@@ -47,6 +47,9 @@ public class Application extends MultiThreadedApplicationAdapter implements IStr
 	public void streamBroadcastStart(IBroadcastStream stream) {
 		
     	System.out.println("[ streamBroadcastStart ]");
+    	
+    	((IServiceCapableConnection) Red5.getConnectionLocal()).invoke("clientConnectionSuccess", new Object[] {Red5.getConnectionLocal().getClient().getId()});
+    	
     	for (String streamName : streamsInRoom) {
     		((IServiceCapableConnection) Red5.getConnectionLocal()).invoke("newStreamInRoom", new Object[] {streamName});
     	}
