@@ -106,7 +106,8 @@
 			
 			protected function btnConnect_clickHandler(event:MouseEvent):void
 			{
-				rtcGateway.connectToServer();
+				var serverUri:String = FlexGlobals.topLevelApplication.parameters.serverUri;
+				rtcGateway.connectToServer(serverUri);
 			}
 			
 		]]>
