@@ -10,8 +10,11 @@ package gateways
 	
 	public class RTCGateway extends NetConnection
 	{
-		public function RTCGateway()
+		var serverUri:String = "rtmp://red5.local/myOflaDemo";
+		
+		public function RTCGateway(serverUri:String)
 		{
+			this.serverUri = serverUri;
 		}
 		
 		public function connectToServer():void{
@@ -19,7 +22,7 @@ package gateways
 			if(this.hasEventListener(NetStatusEvent.NET_STATUS))
 				this.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 			this.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-			this.connect("rtmp://red5.local/myOflaDemo"); // Change the Red5 URL
+			this.connect(serverUri); 
 		}
 		
 		protected function onNetStatus(e:NetStatusEvent):void
