@@ -19,17 +19,27 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>F:/Red5-1.0.4-snapshot/webapps/myoflademo</location>
+			<location>/Users/hnobile/Projects/myoflademo/macdemo</location>
 		</link>
 		<link>
 			<name>bin-release</name>
 			<type>2</type>
-			<location>P:/MyOflaDemo/red5-compiledapp</location>
+			<location>/Applications/Adobe Flash Builder 4.7/Adobe Flash Builder 4.7.app/Contents/MacOS/P::/MyOflaDemo/red5-compiledapp</location>
 		</link>
 		<link>
 			<name>bin-release1</name>
 			<type>2</type>
-			<location>P:/MyOflaDemo/myoflademo</location>
+			<location>/Applications/Adobe Flash Builder 4.7/Adobe Flash Builder 4.7.app/Contents/MacOS/P::/MyOflaDemo/myoflademo</location>
+		</link>
+		<link>
+			<name>bin-release2</name>
+			<type>2</type>
+			<location>/Users/hnobile/Projects/MiniPublisher</location>
+		</link>
+		<link>
+			<name>bin-release3</name>
+			<type>2</type>
+			<location>/Users/hnobile/Projects/MiniSubscriber</location>
 		</link>
 	</linkedResources>
 </projectDescription>

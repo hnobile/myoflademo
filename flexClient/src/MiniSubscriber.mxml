@@ -4,7 +4,6 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   creationComplete="creationComplete(event)"
 			   width="955" height="600">
-	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -38,41 +37,8 @@
 			protected function handleConnectionSuccess(event:Event):void {
 				
 				ns = new NetStream(rtcGateway);
-				
-				// Camera
-				var cam:Camera = Camera.getCamera();
-				if (cam != null) {
-					cam.setMode(192, 144, 10, false);
-					cam.setKeyFrameInterval(30);
-					cam.setQuality(12200, 0);
-					
-					var video:Video = new Video();
-					video.smoothing = true;
-					video.name = "theVideo";
-					
-					video.attachCamera(cam);
-					myCamera.addChild(video);
-					ns.attachCamera(cam);
-				}
-				
-				// Microphone
-				var options:MicrophoneEnhancedOptions = new MicrophoneEnhancedOptions();
-				options.mode = MicrophoneEnhancedMode.FULL_DUPLEX;
-				var mic:Microphone = Microphone.getEnhancedMicrophone();
-				mic.rate = 11;
-				if(mic != null)
-				{
-					mic.enhancedOptions = options;
-					mic.setLoopBack(false);
-					mic.setSilenceLevel(0);
-					ns.attachAudio(mic);
-				}
-				
-				if (mic != null && cam != null) {
-					ns.publish(txtStreamName.text,"live");
-				}
-				
-				
+				var evt:NewStreamInRoomEvent = new NewStreamInRoomEvent(txtStreamName.text);
+				handleNewStreamInRoom(evt);
 			}
 			
 			public function handleClientConnectionSuccess(event:ClientConnectionSuccessEvent):void{
